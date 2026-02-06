@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'api_assignment',
     'rest_framework',
     'rest_framework.authtoken',
-    'djoser'
+    'djoser',
 ]
 
 MIDDLEWARE = [
