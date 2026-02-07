@@ -229,7 +229,7 @@ class CartMenuItemView(APIView):
      
      def post(self, request):
           item_id = request.data.get("id") 
-          qty = request.data.get("quantity", default=1)
+          qty = int(request.data.get("quantity", default=1))
           if not item_id:
                return Response('Menu item id required', status.HTTP_400_BAD_REQUEST)
           try:
@@ -280,7 +280,7 @@ class OrderView(APIView):
                order_data = {
                     "user": request.user.id,
                     "total": 0,
-                    "date": now()
+                    "date": now().date()
                }
                order_serializer = OrderSerializer(data=order_data)
                order_serializer.is_valid(raise_exception=True)
@@ -292,7 +292,7 @@ class OrderView(APIView):
                for item in items:
                     line = {
                          "order": new_order.id,
-                         "menuitem": item.menuitem,
+                         "menuitem": item.menuitem.id,
                          "unit_price": item.unit_price,
                          "quantity": item.quantity,
                          "price": item.price
@@ -324,24 +324,31 @@ class SingleOrderView(APIView):
           item = get_object_or_404(Order, pk=pk)
           
           if is_manager(request.user):
-               delivery_crew_id = request.data.get("delivery_crew_id")
-               delivery_status = request.data.get("status")
                new_item = {}
-               if delivery_crew_id:
-                    new_item["delivery_crew_id"] = delivery_crew_id
-               if delivery_status:
-                    new_item["status"] = delivery_status
+               delivery_crew_id = request.data.get("id")
+               delivery_status = request.data.get("status")
+               if not delivery_crew_id or not delivery_status:
+                    return Response("Required at least id and status")
+
+               user = User.objects.get(id=delivery_crew_id)
+               in_group = user.groups.filter(name="Delivery crew").exists()
+               if not in_group:
+                    return Response("No delivery crew found with info.")
+               new_item["delivery_crew"] = delivery_crew_id
+
+               new_item["status"] = delivery_status
+
                serializer = OrderSerializer(item, data=new_item, partial=True)
                serializer.is_valid(raise_exception=True)
                serializer.save()
-               return Response("Order successfully update delivery status.", status.HTTP_200_OK)
+               return Response("Order successfully update delivery crew and status.", status.HTTP_200_OK)
 
           if is_delivery_crew(request.user):
-               new_item = { "status": 1 }
-               serializer = OrderSerializer(item, data=new_item, partial=True)
-               serializer.is_valid(raise_exception=True)
-               serializer.save()
-               return Response("Order successfully update delivery crew.", status.HTTP_200_OK)
+               if item.status:
+                    return Response("Order already delivered", status.HTTP_400_BAD_REQUEST)
+               item.status = True
+               item.save()
+               return Response("Order successfully update delivery status.", status.HTTP_200_OK)
           
           return Response("You do not have permission to update.", status.HTTP_403_FORBIDDEN)
 

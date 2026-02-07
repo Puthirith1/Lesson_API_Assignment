@@ -94,7 +94,7 @@ body = {
 url = http://localhost:8000/orders/1
 method = PATCH
 body = {
-     "delivery_crew" : 1,
+     "id" : 3,
      "status" : 0
 }
 
