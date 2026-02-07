@@ -30,7 +30,7 @@ body = {
 
 1.   The admin can assign users to the manager group
 
-url = http://localhost:8000/groups/manager/users
+url = http://localhost:8000/api/groups/manager/users
 method = POST
 body = {
      "id" : 4
@@ -41,11 +41,11 @@ body = {
 }
 
 2.	You can access the manager group with an admin token
-url = http://localhost:8000/groups/manager/users
+url = http://localhost:8000/api/groups/manager/users
 method = GET
 
 3.	The admin can add menu items
-url = http://localhost:8000/menu-items
+url = http://localhost:8000/api/menu-items
 method = POST
 body = {
      "title" : "menu1",
@@ -55,7 +55,7 @@ body = {
 }
 
 4.	The admin can add categories
-url = http://localhost:8000/categories
+url = http://localhost:8000/api/categories
 method = POST
 body = {
      "title" : "menu1",
@@ -73,14 +73,14 @@ body = {
 }
 
 6.	Managers can update the item of the day
-url = http://localhost:8000/menu-items/1
+url = http://localhost:8000/api/menu-items/1
 metod = PATCH
 body = {
      "featured" : true
 }
 
 7.	Managers can assign users to the delivery crew
-url = http://localhost:8000/groups/delivery-crew/users
+url = http://localhost:8000/api/groups/delivery-crew/users
 method = POST
 body = {
      "id" : 4
@@ -91,7 +91,7 @@ body = {
 }
 
 8.	Managers can assign orders to the delivery crew
-url = http://localhost:8000/orders/1
+url = http://localhost:8000/api/orders/1
 method = PATCH
 body = {
      "id" : 3,
@@ -99,11 +99,11 @@ body = {
 }
 
 9.	The delivery crew can access orders assigned to them
-url = http://localhost:8000/orders
+url = http://localhost:8000/api/orders
 method = GET
 
 10.	The delivery crew can update an order as delivered
-url = http://localhost:8000/orders/1
+url = http://localhost:8000/api/orders/1
 method = PATCH
 
 11.	Customers can register
@@ -123,27 +123,27 @@ body = {
 }
 
 13.	Customers can browse all categories
-url = http://localhost:8000/categories
+url = http://localhost:8000/api/categories
 method = GET
 
 14.	Customers can browse all the menu items at once
-url = http://localhost:8000/menu-items
+url = http://localhost:8000/api/menu-items
 method = GET
 
 15.	Customers can browse menu items by category
-url = http://localhost:8000/menu-items?category=Category A
+url = http://localhost:8000/api/menu-items?category=Category A
 method = GET
 
 16.	Customers can paginate menu items
-url = http://localhost:8000/menu-items?perpage=10&page=1
+url = http://localhost:8000/api/menu-items?perpage=10&page=1
 method = GET
 
 17.	Customers can sort menu items by price
-url = http://localhost:8000/menu-items?ordering=price
+url = http://localhost:8000/api/menu-items?ordering=price
 method = GET
 
 18.	Customers can add menu items to the cart
-url = http://localhost:8000/cart/menu-items
+url = http://localhost:8000/api/cart/menu-items
 method = POST
 body = {
      "id" = "1",
@@ -151,13 +151,13 @@ body = {
 }
 
 19.	Customers can access previously added items in the cart
-url = http://localhost:8000/cart/menu-items
+url = http://localhost:8000/api/cart/menu-items
 method = GET
 
 20.	Customers can place orders
-url = http://localhost:8000/Order
+url = http://localhost:8000/api/Order
 method = POST
 
 21.	Customers can browse their own orders
-url = http://localhost:8000/Order
+url = http://localhost:8000/api/Order
 method = GET
