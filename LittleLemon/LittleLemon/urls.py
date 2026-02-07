@@ -1,5 +1,5 @@
 """
-URL configuration for assignment project.
+URL configuration for LittleLemon project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/6.0/topics/http/urls/
@@ -21,5 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include('djoser.urls.authtoken')),
     path('auth/', include('djoser.urls')),
-    path('', include('api_assignment.urls')),
+    path('', include('LittleLemonAPI.urls')),
 ]

@@ -220,6 +220,11 @@ class OrderView(APIView):
                serializer = OrderSerializer(orders, many=True)
                return Response(serializer.data, status.HTTP_200_OK)
           
+          if is_delivery_crew(request.user):
+               orders = Order.objects.all(delivery_crew_id=request.user.id)
+               serializer = OrderSerializer(orders, many=True)
+               return Response(serializer.data, status.HTTP_200_OK)
+          
           orders = Order.objects.filter(user_id=request.user.id)
           serializer = OrderSerializer(orders, many=True)
           return Response(serializer.data, status.HTTP_200_OK)
@@ -265,17 +270,55 @@ class SingleOrderView(APIView):
      def put(self, request, pk):
           item = get_object_or_404(Order, pk=pk)
           
-          if is_manager(request.user):
-               delivery_group = Group.objects.get(name="Delivery crew")
-               delivery_crew = User.objects.filter(groups=delivery_group).first()
-               if not delivery_crew:
-                    return Response("No delivery crew.", status.HTTP_404_NOT_FOUND)
+          if not is_manager(request.user):
+               return Response("You do not have permission to update.", status.HTTP_403_FORBIDDEN)
+          
+          delivery_crew_id = request.data["delivery_crew_id"]
+          delivery_status = request.data["status"]
+          new_item = {}
+          if delivery_crew_id:
+               new_item["delivery_crew_id"] = delivery_crew_id
+          if delivery_status:
+               new_item["status"] = delivery_status
+          serializer = OrderSerializer(item, data=new_item, partial=True)
+          serializer.is_valid(raise_exception=True)
+          serializer.save()
+          return Response("Order successfully update delivery crew.", status.HTTP_200_OK)
+     
 
+     def patch(self, request, pk):
+          item = get_object_or_404(Order, pk=pk)
+          
+          if is_manager(request.user):
                delivery_crew_id = request.data["delivery_crew_id"]
                delivery_status = request.data["status"]
+               new_item = {}
                if delivery_crew_id:
-                    item.delivery_crew_id = delivery_crew_id
+                    new_item["delivery_crew_id"] = delivery_crew_id
                if delivery_status:
-                    item.status = delivery_status
-               item.save()
-               return Response("Deliver crew set to order.", status.HTTP_200_OK)
+                    new_item["status"] = delivery_status
+               serializer = OrderSerializer(item, data=new_item, partial=True)
+               serializer.is_valid(raise_exception=True)
+               serializer.save()
+               return Response("Order successfully update delivery status.", status.HTTP_200_OK)
+
+          if is_delivery_crew(request.user):
+               delivery_status = request.data["status"]
+               new_item = {}
+               if delivery_status:
+                    new_item["status"] = delivery_status
+               serializer = OrderSerializer(item, data=new_item, partial=True)
+               serializer.is_valid(raise_exception=True)
+               serializer.save()
+               return Response("Order successfully update delivery crew.", status.HTTP_200_OK)
+          
+          return Response("You do not have permission to update.", status.HTTP_403_FORBIDDEN)
+
+     def delete(self, request, pk):
+          item = get_object_or_404(Order, pk=pk)
+
+          if not is_manager(request.user):
+               return Response("You do not have permission to delete order.", status.HTTP_403_FORBIDDEN)
+          
+          item.delete()
+          return Response("Order delete successfully.", status.HTTP_200_OK)

@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 # Create your models here.
 class MenuItem(models.Model):
@@ -12,8 +13,8 @@ class Cart(models.Model):
 
 class Order(models.Model):
      user_id = models.BigIntegerField()
-     delivery_crew_id = models.CharField(max_length=255)
-     status = models.SmallIntegerField()
+     delivery_crew_id = models.BigIntegerField(null=True)
+     status = models.SmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(1)], default=0)
 
 class OrderItem(models.Model):
      order_id = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="order_item")

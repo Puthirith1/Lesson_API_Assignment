@@ -1,0 +1,15 @@
+Superuser
+     -Username = admin
+     -Password = admin
+
+Manager
+     -Username = Benson
+     -Password = API@2026
+
+Delivery crew
+     -Username = Jerry
+     -Password = API@2026
+
+Customer
+     -Username = Tom
+     -Password = API@2026
