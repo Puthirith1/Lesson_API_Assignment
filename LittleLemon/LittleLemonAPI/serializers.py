@@ -1,12 +1,16 @@
 from rest_framework import serializers
-from .models import MenuItem, Cart, Order, OrderItem
+from . import models
 from django.contrib.auth.models import User
 
-class MenuItemSerializer(serializers.ModelSerializer):
-    inventory = serializers.IntegerField(read_only=True)
+class CategorySerializer(serializers.ModelSerializer):
     class Meta:
-        model = MenuItem
-        fields = ['id', 'name', 'price', 'inventory']
+        model = models.Category
+        fields = ['id', 'slug', 'title']
+
+class MenuItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.MenuItem
+        fields = ['id', 'title', 'price', 'featured', 'category']
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -15,16 +19,16 @@ class UserSerializer(serializers.ModelSerializer):
 
 class CartSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Cart
-        fields = ['id', 'user_id', 'menu_item_name', 'menu_item_price']
+        model = models.Cart
+        fields = ['id', 'user', 'menuitem', 'quantity', 'unit_price', 'price']
 
 class OrderItemSerializer(serializers.ModelSerializer):
     class Meta:
-        model = OrderItem
-        fields = ['id', 'order_id', 'menu_item_name', 'menu_item_price']
+        model = models.OrderItem
+        fields = ['id', 'order', 'menuitem', 'quantity', 'unit_price', 'price']
 
 class OrderSerializer(serializers.ModelSerializer):
     order_item = OrderItemSerializer(many=True, read_only=True)
     class Meta:
-        model = Order
-        fields = ['id', 'user_id', 'delivery_crew_id', 'status', 'order_item']
+        model = models.Order
+        fields = fields = ['id', 'user', 'delivery_crew', 'status', 'total', 'date']

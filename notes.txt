@@ -13,3 +13,151 @@ Delivery crew
 Customer
      -Username = Tom
      -Password = API@2026
+
+
+
+// API Example to help with grading
+
+-Get user token
+url = http://localhost:8000/auth/token/login/
+method = POST
+body = {
+     "username" : "admin",
+     "password" : "admin"
+}
+
+// Secure API Add "Authentication" : "token <actual_token_key>" to header
+
+1.   The admin can assign users to the manager group
+
+url = http://localhost:8000/groups/manager/users
+method = POST
+body = {
+     "id" : 4
+}
+or 
+body = {
+     "username" : "Tom"
+}
+
+2.	You can access the manager group with an admin token
+url = http://localhost:8000/groups/manager/users
+method = GET
+
+3.	The admin can add menu items
+url = http://localhost:8000/menu-items
+method = POST
+body = {
+     "title" : "menu1",
+     "price" : 10,
+     "featured" : false,
+     "category" : 1
+}
+
+4.	The admin can add categories
+url = http://localhost:8000/categories
+method = POST
+body = {
+     "title" : "menu1",
+     "price" : 10,
+     "featured" : false,
+     "category" : 1
+}
+
+5.	Managers can log in 
+url = http://localhost:8000/auth/token/login/
+method = POST
+body = {
+     "username" : "Benson",
+     "password" : "API@2026"
+}
+
+6.	Managers can update the item of the day
+url = http://localhost:8000/menu-items/1
+metod = PATCH
+body = {
+     "featured" : true
+}
+
+7.	Managers can assign users to the delivery crew
+url = http://localhost:8000/groups/delivery-crew/users
+method = POST
+body = {
+     "id" : 4
+}
+or 
+body = {
+     "username" : "Tom"
+}
+
+8.	Managers can assign orders to the delivery crew
+url = http://localhost:8000/orders/1
+method = PATCH
+body = {
+     "delivery_crew" : 1,
+     "status" : 0
+}
+
+9.	The delivery crew can access orders assigned to them
+url = http://localhost:8000/orders
+method = GET
+
+10.	The delivery crew can update an order as delivered
+url = http://localhost:8000/orders/1
+method = PATCH
+
+11.	Customers can register
+url = http://localhost:8000/auth/users/
+method = POST
+body = {
+     "username" : "test",
+     "password" : "API@2026"
+}
+
+12.	Customers can log in using their username and password and get access tokens
+url = http://localhost:8000/auth/token/login/
+method = POST
+body = {
+     "username" : "test",
+     "password" : "API@2026"
+}
+
+13.	Customers can browse all categories
+url = http://localhost:8000/categories
+method = GET
+
+14.	Customers can browse all the menu items at once
+url = http://localhost:8000/menu-items
+method = GET
+
+15.	Customers can browse menu items by category
+url = http://localhost:8000/menu-items?category=Category A
+method = GET
+
+16.	Customers can paginate menu items
+url = http://localhost:8000/menu-items?perpage=10&page=1
+method = GET
+
+17.	Customers can sort menu items by price
+url = http://localhost:8000/menu-items?ordering=price
+method = GET
+
+18.	Customers can add menu items to the cart
+url = http://localhost:8000/cart/menu-items
+method = POST
+body = {
+     "id" = "1",
+     "quantity" = 1 
+}
+
+19.	Customers can access previously added items in the cart
+url = http://localhost:8000/cart/menu-items
+method = GET
+
+20.	Customers can place orders
+url = http://localhost:8000/Order
+method = POST
+
+21.	Customers can browse their own orders
+url = http://localhost:8000/Order
+method = GET
